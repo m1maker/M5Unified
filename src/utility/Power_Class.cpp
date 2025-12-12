@@ -1332,7 +1332,7 @@ namespace m5
 
 #if defined (CONFIG_IDF_TARGET_ESP32S3)
       case board_t::board_M5PowerHub:
-        mv = getBatteryVoltage();
+        mv = getBatteryVoltage() / 2;
         break;
 #endif
       default:
