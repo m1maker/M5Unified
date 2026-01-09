@@ -342,7 +342,12 @@ namespace m5
 
       auto brightness = Display.getBrightness();
       Display.setBrightness(0);
-      bool res = Display.init_without_reset(cfg.clear_display);
+      bool res = false;
+      if (cfg.clear_display) {
+        res = Display.init();
+      } else {
+        res = Display.init_without_reset(false);
+      }
       auto board = _check_boardtype(Display.getBoard());
       if (board == board_t::board_unknown) { board = cfg.fallback_board; }
       _board = board;
@@ -629,6 +634,7 @@ namespace m5
     static void _setup_pinmap(board_t);
     static bool _speaker_enabled_cb_core2(void* args, bool enabled);
     static bool _speaker_enabled_cb_cores3(void* args, bool enabled);
+    static bool _speaker_enabled_cb_sticks3(void* args, bool enabled);
     static bool _speaker_enabled_cb_hat_spk(void* args, bool enabled);
     static bool _speaker_enabled_cb_atomic_echo(void* args, bool enabled);
     static bool _speaker_enabled_cb_tab5(void* args, bool enabled);
