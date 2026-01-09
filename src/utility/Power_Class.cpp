@@ -1367,7 +1367,7 @@ namespace m5
 
 #if defined (CONFIG_IDF_TARGET_ESP32S3)
       case board_t::board_M5PowerHub:
-        mv = getBatteryVoltage();
+        mv = getBatteryVoltage() / 2;
         break;
 #endif
       default:
@@ -1544,7 +1544,7 @@ namespace m5
       case board_t::board_M5PowerHub:
         uint8_t buf[2];
         if(M5.In_I2C.readRegister(powerhub_i2c_addr, 0x32, buf, sizeof(buf), i2c_freq))
-          return (int16_t)(buf[1] << 8) | buf[0];
+          return -(int16_t)((buf[1] << 8) | buf[0]);
         return 0;
 #endif
       default:
