@@ -880,7 +880,7 @@ namespace m5
 
   void Power_Class::_powerOff(bool withTimer)
   {
-#if defined (M5UNIFIED_PC_BUILD)
+#if defined(M5UNIFIED_PC_BUILD)
     (void)withTimer;
 #else
     bool use_deepsleep = true;
@@ -970,8 +970,10 @@ namespace m5
 
 #if defined (CONFIG_IDF_TARGET_ESP32S3)
     case board_t::board_M5PowerHub:
-      uint8_t buf[4]={};
-      M5.In_I2C.writeRegister(powerhub_i2c_addr, 0x01, buf, sizeof(buf), i2c_freq);
+      uint8_t buf[6]={};
+      M5.In_I2C.writeRegister(powerhub_i2c_addr, 0x00, buf, sizeof(buf), i2c_freq);
+      M5.In_I2C.writeRegister8(powerhub_i2c_addr, 0xE0, 1, i2c_freq); 
+      use_deepsleep = false;
       break;
 #endif
     }
