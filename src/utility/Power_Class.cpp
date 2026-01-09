@@ -776,6 +776,13 @@ namespace m5
       }
       led->setBrightness(brightness);
       break;
+    case board_t::board_ArduinoNessoN1:
+      {
+        // Cannot set brightness; only off and on
+        bool level = (brightness == 0) ? true : false;
+        M5.getIOExpander(1).digitalWrite(7, level);  // E1-> 7 = LED
+      }
+      break;
     default:
       break;
     }
