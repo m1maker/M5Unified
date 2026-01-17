@@ -1388,62 +1388,7 @@ static constexpr const uint8_t _pin_table_mbus[][31] = {
     case board_t::board_M5NanoC6:
       m5gfx::pinMode(GPIO_NUM_9, m5gfx::pin_mode_t::input_pullup);
       break;
-
-#elif defined (CONFIG_IDF_TARGET_ESP32S3)
-    case board_t::board_M5AtomS3:
-    case board_t::board_M5AtomS3Lite:
-    case board_t::board_M5AtomS3U:
-    case board_t::board_M5AtomS3R:
-    case board_t::board_M5AtomEchoS3R:
-      m5gfx::pinMode(GPIO_NUM_41, m5gfx::pin_mode_t::input);
-      break;
-
-    case board_t::board_M5AirQ:
-      m5gfx::pinMode(GPIO_NUM_0, m5gfx::pin_mode_t::input);
-      m5gfx::pinMode(GPIO_NUM_8, m5gfx::pin_mode_t::input);
-      break;
-
-    case board_t::board_M5VAMeter:
-      m5gfx::pinMode(GPIO_NUM_0, m5gfx::pin_mode_t::input);
-      m5gfx::pinMode(GPIO_NUM_2, m5gfx::pin_mode_t::input);
-      break;
-
-    case board_t::board_M5StampS3:
-    case board_t::board_M5Cardputer:
-    case board_t::board_M5CardputerADV:
-      m5gfx::pinMode(GPIO_NUM_0, m5gfx::pin_mode_t::input);
-      break;
-
-    case board_t::board_M5Capsule:
-    case board_t::board_M5Dial:
-    case board_t::board_M5DinMeter:
-      m5gfx::pinMode(GPIO_NUM_42, m5gfx::pin_mode_t::input);
-      break;
-
-    case board_t::board_M5StampPLC:
-      {
-        auto& ioexp = getIOExpander(0);
-        // lcd backlight
-        ioexp.setDirection(7, true);
-        ioexp.setPullMode(7, false);
-        ioexp.setHighImpedance(7, false);
-  
-        for (int i = 0; i < 3; ++i) {
-          // button a~c
-          ioexp.setDirection(i, false);
-          ioexp.setPullMode(i, true);
-          ioexp.setHighImpedance(i, false);
-        }
-        delay(100);
-      }
-      break;
-
-    case board_t::board_M5PowerHub:
-      m5gfx::pinMode(GPIO_NUM_11, m5gfx::pin_mode_t::input);
-      break;
-
 #endif
-
     default:
       break;
     }
@@ -1491,38 +1436,6 @@ static constexpr const uint8_t _pin_table_mbus[][31] = {
         break;
 
 #elif defined (CONFIG_IDF_TARGET_ESP32S3)
-      case board_t::board_M5StackCoreS3:
-      case board_t::board_M5StackCoreS3SE:
-        if (cfg.internal_mic)
-        {
-          mic_cfg.magnification = 2;
-          mic_cfg.over_sampling = 1;
-          mic_cfg.pin_mck = GPIO_NUM_0;
-          mic_cfg.pin_bck = GPIO_NUM_34;
-          mic_cfg.pin_ws = GPIO_NUM_33;
-          mic_cfg.pin_data_in = GPIO_NUM_14;
-          mic_cfg.i2s_port = I2S_NUM_1;
-          mic_cfg.input_channel = input_channel_t::input_stereo;
-          mic_enable_cb = _microphone_enabled_cb_cores3;
-        }
-        break;
-
-      case board_t::board_M5AtomS3U:
-        if (cfg.internal_mic)
-        {
-          mic_cfg.pin_data_in = GPIO_NUM_38;
-          mic_cfg.pin_ws = GPIO_NUM_39;
-        }
-        break;
-
-      case board_t::board_M5Cardputer:
-        if (cfg.internal_mic)
-        {
-          mic_cfg.pin_data_in = GPIO_NUM_46;
-          mic_cfg.pin_ws = GPIO_NUM_43;
-        }
-        break;
-
       case board_t::board_M5CardputerADV:
         if (cfg.internal_mic)
         {
@@ -1530,14 +1443,6 @@ static constexpr const uint8_t _pin_table_mbus[][31] = {
           mic_cfg.pin_ws = GPIO_NUM_43;
           mic_cfg.pin_bck = GPIO_NUM_41;
           mic_enable_cb = _microphone_enabled_cb_cardputer_adv;
-        }
-        break;
-
-      case board_t::board_M5Capsule:
-        if (cfg.internal_mic)
-        {
-          mic_cfg.pin_data_in = GPIO_NUM_41;
-          mic_cfg.pin_ws = GPIO_NUM_40;
         }
         break;
 
@@ -1635,147 +1540,6 @@ static constexpr const uint8_t _pin_table_mbus[][31] = {
         break;
 
 #elif defined (CONFIG_IDF_TARGET_ESP32S3)
-      case board_t::board_M5StackCoreS3:
-      case board_t::board_M5StackCoreS3SE:
-        if (cfg.internal_spk)
-        {
-          spk_cfg.pin_bck = GPIO_NUM_34;
-          spk_cfg.pin_ws = GPIO_NUM_33;
-          spk_cfg.pin_data_out = GPIO_NUM_13;
-          spk_cfg.magnification = 4;
-          spk_cfg.i2s_port = I2S_NUM_1;
-          spk_enable_cb = _speaker_enabled_cb_cores3;
-        }
-        break;
-
-      case board_t::board_M5AtomS3:
-      case board_t::board_M5AtomS3Lite:
-      case board_t::board_M5AtomS3R:
-      case board_t::board_M5AtomS3RCam:
-      case board_t::board_M5AtomS3RExt:
-        if (cfg.external_speaker.atomic_spk || cfg.external_speaker.atomic_echo)
-        { // for ATOMIC SPK / ATOMIC ECHO BASE
-          bool atomdisplay = false;
-          for (int i = 0; i < getDisplayCount(); ++i) {
-            if (Displays(i).getBoard() == board_t::board_M5AtomDisplay) {
-              atomdisplay = true;
-              break;
-            }
-          }
-          if (!atomdisplay) {
-            bool flg_atomic_spk = false;
-            if (cfg.external_speaker.atomic_spk) {
-              m5gfx::pinMode(GPIO_NUM_6, m5gfx::pin_mode_t::input_pulldown); // MOSI
-              m5gfx::pinMode(GPIO_NUM_7, m5gfx::pin_mode_t::input_pulldown); // SCLK
-              if (m5gfx::gpio_in(GPIO_NUM_6)
-                && m5gfx::gpio_in(GPIO_NUM_7))
-              {
-                flg_atomic_spk = true;
-                ESP_LOGD("M5Unified", "ATOMIC SPK");
-                // atomic_spkのSDカード用ピンを割当
-                _get_pin_table[sd_spi_sclk] = GPIO_NUM_7;
-                _get_pin_table[sd_spi_copi] = GPIO_NUM_6;
-                _get_pin_table[sd_spi_cipo] = GPIO_NUM_8;
-                cfg.internal_imu = false; /// avoid conflict with i2c
-                cfg.internal_rtc = false; /// avoid conflict with i2c
-                spk_cfg.pin_bck = GPIO_NUM_5;
-                spk_cfg.pin_ws = GPIO_NUM_39;
-                spk_cfg.pin_data_out = GPIO_NUM_38;
-                spk_cfg.magnification = 16;
-              }
-            }
-            if (cfg.external_speaker.atomic_echo && !flg_atomic_spk) {
-              spk_cfg.pin_bck = GPIO_NUM_8;
-              spk_cfg.pin_ws = GPIO_NUM_6;
-              spk_cfg.pin_data_out = GPIO_NUM_5;
-              spk_cfg.magnification = 1;
-              spk_enable_cb = _speaker_enabled_cb_atomic_echo;
-
-              mic_cfg.i2s_port = spk_cfg.i2s_port;
-              mic_cfg.pin_bck = GPIO_NUM_8;
-              mic_cfg.pin_ws = GPIO_NUM_6;
-              mic_cfg.pin_data_in = GPIO_NUM_7;
-              mic_cfg.magnification = 1;
-              mic_cfg.over_sampling = 1;
-              mic_cfg.pin_mck = GPIO_NUM_NC;
-              mic_cfg.stereo = false;
-              mic_enable_cb = _microphone_enabled_cb_atomic_echo;
-            }
-          }
-        }
-        break;
-
-      case board_t::board_M5AtomEchoS3R:
-        if (cfg.internal_mic) {
-          cfg.internal_imu = false;
-
-          // spk_cfg.pin_mck = GPIO_NUM_11;
-          spk_cfg.pin_bck = GPIO_NUM_17;
-          spk_cfg.pin_ws = GPIO_NUM_3;
-          spk_cfg.pin_data_out = GPIO_NUM_48;
-          spk_cfg.magnification = 1;
-          spk_cfg.i2s_port = I2S_NUM_1;
-          spk_enable_cb = _speaker_enabled_cb_atom_echos3r;
-
-          mic_cfg.i2s_port = spk_cfg.i2s_port;
-          mic_cfg.pin_mck = GPIO_NUM_11;
-          mic_cfg.pin_bck = GPIO_NUM_17;
-          mic_cfg.pin_ws = GPIO_NUM_3;
-          mic_cfg.pin_data_in = GPIO_NUM_4;
-          mic_cfg.magnification = 1;
-          mic_cfg.over_sampling = 1;
-          mic_cfg.stereo = true;
-          mic_enable_cb = _microphone_enabled_cb_atom_echos3r;
-        }
-      break;
-
-      case board_t::board_M5Capsule:
-        if (cfg.internal_spk)
-        {
-          spk_cfg.pin_data_out = GPIO_NUM_2;
-          spk_cfg.buzzer = true;
-          spk_cfg.magnification = 48;
-        }
-        break;
-
-      case board_t::board_M5Dial:
-      case board_t::board_M5DinMeter:
-        if (cfg.internal_spk)
-        {
-          spk_cfg.pin_data_out = GPIO_NUM_3;
-          spk_cfg.buzzer = true;
-          spk_cfg.magnification = 48;
-        }
-        break;
-
-      case board_t::board_M5AirQ:
-        if (cfg.internal_spk)
-        {
-          spk_cfg.pin_data_out = GPIO_NUM_9;
-          spk_cfg.buzzer = true;
-          spk_cfg.magnification = 48;
-        }
-        break;
-
-      case board_t::board_M5VAMeter:
-        if (cfg.internal_spk)
-        {
-          spk_cfg.pin_data_out = GPIO_NUM_14;
-          spk_cfg.buzzer = true;
-          spk_cfg.magnification = 48;
-        }
-        break;
-
-      case board_t::board_M5PaperS3:
-        if (cfg.internal_spk)
-        {
-          spk_cfg.pin_data_out = GPIO_NUM_21;
-          spk_cfg.buzzer = true;
-          spk_cfg.magnification = 48;
-        }
-        break;
-
-      case board_t::board_M5Cardputer:
       case board_t::board_M5CardputerADV:
         if (cfg.internal_spk)
         {
@@ -1787,15 +1551,6 @@ static constexpr const uint8_t _pin_table_mbus[][31] = {
           if (_board == board_t::board_M5CardputerADV) {
             spk_enable_cb = _speaker_enabled_cb_cardputer_adv;
           }
-        }
-        break;
-
-      case board_t::board_M5StampPLC:
-        if (cfg.internal_spk)
-        {
-          spk_cfg.pin_data_out = GPIO_NUM_44;
-          spk_cfg.buzzer = true;
-          spk_cfg.magnification = 48;
         }
         break;
 
