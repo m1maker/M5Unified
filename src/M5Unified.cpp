@@ -72,182 +72,42 @@ int8_t M5Unified::_get_pin_table[pin_name_max];
 // ピン番号テーブル。 unknownをテーブルの最後に配置する。該当が無い場合はunknownの値が使用される。
 static constexpr const uint8_t _pin_table_i2c_ex_in[][5] = {
                             // In SCL,SDA, EX SCL,SDA
-#if defined (CONFIG_IDF_TARGET_ESP32S3)
-{ board_t::board_M5StackCoreS3, GPIO_NUM_11,GPIO_NUM_12 , GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5StackCoreS3SE,GPIO_NUM_11,GPIO_NUM_12, GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5StampS3    , 255        ,255         , GPIO_NUM_15,GPIO_NUM_13 },
-{ board_t::board_M5Capsule    , GPIO_NUM_10,GPIO_NUM_8  , GPIO_NUM_15,GPIO_NUM_13 },
-{ board_t::board_M5Dial       , GPIO_NUM_12,GPIO_NUM_11 , GPIO_NUM_15,GPIO_NUM_13 },
-{ board_t::board_M5DinMeter   , GPIO_NUM_12,GPIO_NUM_11 , GPIO_NUM_15,GPIO_NUM_13 },
-{ board_t::board_M5AirQ       , GPIO_NUM_12,GPIO_NUM_11 , GPIO_NUM_15,GPIO_NUM_13 },
-{ board_t::board_M5Cardputer  , 255        ,255         , GPIO_NUM_1 ,GPIO_NUM_2  },
 { board_t::board_M5CardputerADV,GPIO_NUM_9 ,GPIO_NUM_8  , GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5VAMeter    , GPIO_NUM_6 ,GPIO_NUM_5  , GPIO_NUM_9 ,GPIO_NUM_8  },
-{ board_t::board_M5AtomS3R    , GPIO_NUM_0 ,GPIO_NUM_45 , GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5AtomS3RExt , GPIO_NUM_0 ,GPIO_NUM_45 , GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5AtomEchoS3R, GPIO_NUM_0 ,GPIO_NUM_45 , GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5AtomS3RCam , GPIO_NUM_0 ,GPIO_NUM_45 , GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5PaperS3    , GPIO_NUM_42,GPIO_NUM_41 , GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5StampPLC   , GPIO_NUM_15,GPIO_NUM_13 , GPIO_NUM_1 ,GPIO_NUM_2  },
-{ board_t::board_M5PowerHub   , GPIO_NUM_48,GPIO_NUM_45 , GPIO_NUM_16,GPIO_NUM_15 },
 { board_t::board_unknown      , GPIO_NUM_39,GPIO_NUM_38 , GPIO_NUM_1 ,GPIO_NUM_2  }, // AtomS3,AtomS3Lite,AtomS3U
-#elif defined (CONFIG_IDF_TARGET_ESP32C3)
-{ board_t::board_unknown      , 255        ,255         , GPIO_NUM_0 ,GPIO_NUM_1  },
-#elif defined (CONFIG_IDF_TARGET_ESP32C6)
-{ board_t::board_M5UnitC6L     ,GPIO_NUM_8 ,GPIO_NUM_10 , 255        ,255         },
-{ board_t::board_ArduinoNessoN1,GPIO_NUM_8 ,GPIO_NUM_10 , GPIO_NUM_8 ,GPIO_NUM_10 },
-{ board_t::board_unknown      , 255        ,255         , GPIO_NUM_1 ,GPIO_NUM_2  }, // NanoC6
-#elif defined (CONFIG_IDF_TARGET_ESP32P4)
-{ board_t::board_M5Tab5       , GPIO_NUM_32,GPIO_NUM_31, GPIO_NUM_54,GPIO_NUM_53 }, // Tab5
-{ board_t::board_unknown      , 255        ,255         , 255        ,255        },
-#else
-{ board_t::board_M5Stack      , GPIO_NUM_22,GPIO_NUM_21 , GPIO_NUM_22,GPIO_NUM_21 },
-{ board_t::board_M5Paper      , GPIO_NUM_22,GPIO_NUM_21 , GPIO_NUM_32,GPIO_NUM_25 },
-{ board_t::board_M5TimerCam   , GPIO_NUM_14,GPIO_NUM_12 , GPIO_NUM_13,GPIO_NUM_4  },
-{ board_t::board_M5AtomLite   , GPIO_NUM_21,GPIO_NUM_25 , GPIO_NUM_32,GPIO_NUM_26 },
-{ board_t::board_M5AtomMatrix , GPIO_NUM_21,GPIO_NUM_25 , GPIO_NUM_32,GPIO_NUM_26 },
-{ board_t::board_M5AtomEcho   , GPIO_NUM_21,GPIO_NUM_25 , GPIO_NUM_32,GPIO_NUM_26 },
-{ board_t::board_M5AtomU      , GPIO_NUM_21,GPIO_NUM_25 , GPIO_NUM_32,GPIO_NUM_26 },
-{ board_t::board_M5AtomPsram  , GPIO_NUM_21,GPIO_NUM_25 , GPIO_NUM_32,GPIO_NUM_26 },
-{ board_t::board_unknown      , GPIO_NUM_22,GPIO_NUM_21 , GPIO_NUM_33,GPIO_NUM_32 }, // Core2,Tough,StickC,CoreInk,Station,StampPico
-#endif
 };
 
 static constexpr const uint8_t _pin_table_port_bc[][5] = {
                           //pB p1,p2, pC p1,p2 (p1 close to 5V)
-#if defined (CONFIG_IDF_TARGET_ESP32S3)
 { board_t::board_M5StackCoreS3, GPIO_NUM_8 ,GPIO_NUM_9 , GPIO_NUM_18,GPIO_NUM_17 },
 { board_t::board_M5StackCoreS3SE,GPIO_NUM_8,GPIO_NUM_9 , GPIO_NUM_18,GPIO_NUM_17 },
-{ board_t::board_M5Dial       , GPIO_NUM_1 ,GPIO_NUM_2 , 255        ,255         },
-{ board_t::board_M5DinMeter   , GPIO_NUM_1 ,GPIO_NUM_2 , 255        ,255         },
-{ board_t::board_M5PowerHub   , 255        ,       255 , GPIO_NUM_1 ,GPIO_NUM_2  },
-#elif defined (CONFIG_IDF_TARGET_ESP32C3)
-#elif defined (CONFIG_IDF_TARGET_ESP32C6)
-{ board_t::board_M5UnitC6L     ,GPIO_NUM_4 ,GPIO_NUM_5 , GPIO_NUM_4 ,GPIO_NUM_5  },
-{ board_t::board_ArduinoNessoN1,GPIO_NUM_4 ,GPIO_NUM_5 , GPIO_NUM_4 ,GPIO_NUM_5  },
-#elif defined (CONFIG_IDF_TARGET_ESP32P4)
-{ board_t::board_M5Tab5       , GPIO_NUM_17,GPIO_NUM_52, GPIO_NUM_7 ,GPIO_NUM_6  }, // Tab5
-#else
-{ board_t::board_M5Stack      , GPIO_NUM_36,GPIO_NUM_26 , GPIO_NUM_16,GPIO_NUM_17 },
-{ board_t::board_M5StackCore2 , GPIO_NUM_36,GPIO_NUM_26 , GPIO_NUM_13,GPIO_NUM_14 },
-{ board_t::board_M5Paper      , GPIO_NUM_33,GPIO_NUM_26 , GPIO_NUM_19,GPIO_NUM_18 },
-{ board_t::board_M5Station    , GPIO_NUM_35,GPIO_NUM_25 , GPIO_NUM_13,GPIO_NUM_14 },
-#endif
 { board_t::board_unknown      , 255        ,255         , 255        ,255 },
 };
 
 static constexpr const uint8_t _pin_table_port_de[][5] = {
                           //pD p1,p2, pE p1,p2
-#if defined (CONFIG_IDF_TARGET_ESP32S3)
 { board_t::board_M5StackCoreS3, 14,10, 18,17 },
 { board_t::board_M5StackCoreS3SE,14,10,18,17 },
-#elif defined (CONFIG_IDF_TARGET_ESP32C3)
-#elif defined (CONFIG_IDF_TARGET_ESP32C6)
-#else
-{ board_t::board_M5Stack      , GPIO_NUM_34,GPIO_NUM_35 , GPIO_NUM_5 ,GPIO_NUM_13 },
-{ board_t::board_M5StackCore2 , GPIO_NUM_34,GPIO_NUM_35 , GPIO_NUM_27,GPIO_NUM_19 },
-{ board_t::board_M5Station    , GPIO_NUM_36,GPIO_NUM_26 , GPIO_NUM_16,GPIO_NUM_17 }, // B2 / C2
-#endif
 { board_t::board_unknown      , 255        ,255         , 255        ,255         },
 };
 
 static constexpr const uint8_t _pin_table_spi_sd[][5] = {
                             // clk,mosi,miso,cs
-#if defined (CONFIG_IDF_TARGET_ESP32S3)
-{ board_t::board_M5StackCoreS3, GPIO_NUM_36, GPIO_NUM_37, GPIO_NUM_35, GPIO_NUM_4  },
-{ board_t::board_M5StackCoreS3SE,GPIO_NUM_36,GPIO_NUM_37, GPIO_NUM_35, GPIO_NUM_4  },
-{ board_t::board_M5Capsule    , GPIO_NUM_14, GPIO_NUM_12, GPIO_NUM_39, GPIO_NUM_11 },
-{ board_t::board_M5Cardputer  , GPIO_NUM_40, GPIO_NUM_14, GPIO_NUM_39, GPIO_NUM_12 },
 { board_t::board_M5CardputerADV,GPIO_NUM_40, GPIO_NUM_14, GPIO_NUM_39, GPIO_NUM_12 },
-{ board_t::board_M5PaperS3    , GPIO_NUM_39, GPIO_NUM_38, GPIO_NUM_40, GPIO_NUM_47 },
-{ board_t::board_M5StampPLC   , GPIO_NUM_7,  GPIO_NUM_8,  GPIO_NUM_9,  GPIO_NUM_10 },
-#elif defined (CONFIG_IDF_TARGET_ESP32C3)
-#elif defined (CONFIG_IDF_TARGET_ESP32C6)
-#elif defined (CONFIG_IDF_TARGET_ESP32P4)
-{ board_t::board_M5Tab5       , GPIO_NUM_43,GPIO_NUM_44, GPIO_NUM_39, GPIO_NUM_42 },
-#else
-{ board_t::board_M5Stack      , GPIO_NUM_18, GPIO_NUM_23, GPIO_NUM_19, GPIO_NUM_4  },
-{ board_t::board_M5StackCore2 , GPIO_NUM_18, GPIO_NUM_23, GPIO_NUM_38, GPIO_NUM_4  },
-{ board_t::board_M5Paper      , GPIO_NUM_14, GPIO_NUM_12, GPIO_NUM_13, GPIO_NUM_4  },
-#endif
 { board_t::board_unknown      , 255        , 255        , 255        , 255         },
 };
 
 static constexpr const uint8_t _pin_table_other0[][2] = {
                              //RGBLED
-#if defined (CONFIG_IDF_TARGET_ESP32S3)
-{ board_t::board_M5AtomS3U    , GPIO_NUM_35 },
-{ board_t::board_M5AtomS3Lite , GPIO_NUM_35 },
-{ board_t::board_M5StampS3    , GPIO_NUM_21 },
-{ board_t::board_M5StampPLC   , GPIO_NUM_21 },
-{ board_t::board_M5AirQ       , GPIO_NUM_21 },
-{ board_t::board_M5Dial       , GPIO_NUM_21 },
-{ board_t::board_M5DinMeter   , GPIO_NUM_21 },
-{ board_t::board_M5Capsule    , GPIO_NUM_21 },
-{ board_t::board_M5Cardputer  , GPIO_NUM_21 },
 { board_t::board_M5CardputerADV,GPIO_NUM_21 },
-#elif defined (CONFIG_IDF_TARGET_ESP32C3)
-{ board_t::board_M5StampC3    , GPIO_NUM_2  },
-{ board_t::board_M5StampC3U   , GPIO_NUM_2  },
-#elif defined (CONFIG_IDF_TARGET_ESP32C6)
-{ board_t::board_M5NanoC6     , GPIO_NUM_20 },
-{ board_t::board_M5UnitC6L    , GPIO_NUM_2  },
-#else
-{ board_t::board_M5Stack      , GPIO_NUM_15 },
-{ board_t::board_M5StackCore2 , GPIO_NUM_25 },
-{ board_t::board_M5Station    , GPIO_NUM_4  },
-{ board_t::board_M5AtomLite   , GPIO_NUM_27 },
-{ board_t::board_M5AtomMatrix , GPIO_NUM_27 },
-{ board_t::board_M5AtomEcho   , GPIO_NUM_27 },
-{ board_t::board_M5AtomU      , GPIO_NUM_27 },
-{ board_t::board_M5AtomPsram  , GPIO_NUM_27 },
-{ board_t::board_M5StampPico  , GPIO_NUM_27 },
-#endif
 { board_t::board_unknown      , 255         },
 };
 
 static constexpr const uint8_t _pin_table_other1[][2] = {
                              //POWER_HOLD
-#if defined (CONFIG_IDF_TARGET_ESP32S3)
-{ board_t::board_M5Dial        , GPIO_NUM_46 },
-{ board_t::board_M5Capsule     , GPIO_NUM_46 },
-{ board_t::board_M5AirQ        , GPIO_NUM_46 },
-{ board_t::board_M5DinMeter    , GPIO_NUM_46 },
-{ board_t::board_M5PaperS3     , GPIO_NUM_44 },
-
-#elif defined (CONFIG_IDF_TARGET_ESP32C3)
-#elif defined (CONFIG_IDF_TARGET_ESP32C6)
-#else
-
-{ board_t::board_M5StickCPlus2 , GPIO_NUM_4  },
-{ board_t::board_M5Paper       , GPIO_NUM_2  },
-{ board_t::board_M5StackCoreInk, GPIO_NUM_12 },
-{ board_t::board_M5TimerCam    , GPIO_NUM_33 },
-
-#endif
 { board_t::board_unknown      , 255         },
 };
 
 static constexpr const uint8_t _pin_table_mbus[][31] = {
-#if defined (CONFIG_IDF_TARGET_ESP32P4)
-{ board_t::board_M5Tab5   ,
-  255        , GPIO_NUM_16,
-  255        , GPIO_NUM_17,
-  255        , 255        ,
-  GPIO_NUM_18, GPIO_NUM_45,
-  GPIO_NUM_19, GPIO_NUM_52,
-  GPIO_NUM_5 , 255        ,
-  GPIO_NUM_38, GPIO_NUM_37,
-  GPIO_NUM_7 , GPIO_NUM_6 ,
-  GPIO_NUM_31, GPIO_NUM_32,
-  GPIO_NUM_3 , GPIO_NUM_4 ,
-  GPIO_NUM_2 , GPIO_NUM_48,
-  GPIO_NUM_47, GPIO_NUM_35,
-  255        , GPIO_NUM_51,
-  255        , 255        ,
-  255        , 255        ,
-},
-#elif defined (CONFIG_IDF_TARGET_ESP32S3)
 { board_t::board_M5StackCoreS3,
   255        , GPIO_NUM_10,
   255        , GPIO_NUM_8 ,
@@ -282,44 +142,6 @@ static constexpr const uint8_t _pin_table_mbus[][31] = {
   255        , 255        ,
   255        , 255        ,
 },
-#elif defined (CONFIG_IDF_TARGET_ESP32C3)
-#elif defined (CONFIG_IDF_TARGET_ESP32C6)
-#else
-{ board_t::board_M5Stack  ,
-  255        , GPIO_NUM_35,
-  255        , GPIO_NUM_36,
-  255        , 255        ,
-  GPIO_NUM_23, GPIO_NUM_25,
-  GPIO_NUM_19, GPIO_NUM_26,
-  GPIO_NUM_18, 255        ,
-  GPIO_NUM_3 , GPIO_NUM_1 ,
-  GPIO_NUM_16, GPIO_NUM_17,
-  GPIO_NUM_21, GPIO_NUM_22,
-  GPIO_NUM_2 , GPIO_NUM_5 ,
-  GPIO_NUM_12, GPIO_NUM_13,
-  GPIO_NUM_15, GPIO_NUM_0 ,
-  255        , GPIO_NUM_34,
-  255        , 255        ,
-  255        , 255        ,
-},
-{ board_t::board_M5StackCore2,
-  255        , GPIO_NUM_35,
-  255        , GPIO_NUM_36,
-  255        , 255        ,
-  GPIO_NUM_23, GPIO_NUM_25,
-  GPIO_NUM_38, GPIO_NUM_26,
-  GPIO_NUM_18, 255        ,
-  GPIO_NUM_3 , GPIO_NUM_1 ,
-  GPIO_NUM_13, GPIO_NUM_14,
-  GPIO_NUM_21, GPIO_NUM_22,
-  GPIO_NUM_32, GPIO_NUM_33,
-  GPIO_NUM_27, GPIO_NUM_19,
-  GPIO_NUM_2 , GPIO_NUM_0 ,
-  255        , GPIO_NUM_34,
-  255        , 255        ,
-  255        , 255        ,
-},
-#endif
 { board_t::board_unknown  , 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 },
 };
 
