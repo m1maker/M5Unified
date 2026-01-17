@@ -11,12 +11,7 @@
 #include <sdkconfig.h>
 #include <nvs.h>
 
-#include "imu/MPU6886_Class.hpp"
-#include "imu/SH200Q_Class.hpp"
 #include "imu/BMI270_Class.hpp"
-#include "imu/BMM150_Class.hpp"
-#include "imu/AK8963_Class.hpp"
-
 #endif
 
 static constexpr char LIBRARY_NAME[] = "M5Unified";
@@ -39,39 +34,6 @@ namespace m5
     _imu = imu_t::imu_none;
     _has_sensor_mask = sensor_mask_none;
 
-    {
-      auto mpu6886 = new MPU6886_Class();
-      auto res = mpu6886->begin(i2c);
-      if (!res) { delete mpu6886; }
-      else
-      {
-        _imu_instance[0].reset(mpu6886);
-        switch (mpu6886->whoAmI())
-        {
-        case MPU6886_Class::DEV_ID_MPU6050:
-          _imu = imu_t::imu_mpu6050;
-          break;
-        case MPU6886_Class::DEV_ID_MPU6886:
-          _imu = imu_t::imu_mpu6886;
-          break;
-        case MPU6886_Class::DEV_ID_MPU9250:
-          _imu = imu_t::imu_mpu9250;
-          break;
-        default:
-          _imu = imu_t::imu_unknown;
-          break;
-        }
-#if defined (CONFIG_IDF_TARGET_ESP32) || !defined ( CONFIG_IDF_TARGET )
-        if (board == m5::board_t::board_M5AtomMatrix)
-        { // ATOM Matrix's IMU is oriented differently, so change the setting.
-          _internal_axisorder_fixed[sensor_index_accel] = (internal_axisorder_t)(axis_invert_x | axis_invert_z); // X軸,Z軸反転
-          _internal_axisorder_fixed[sensor_index_gyro ] = (internal_axisorder_t)(axis_invert_x | axis_invert_z); // X軸,Z軸反転
-        }
-#endif
-      }
-    }
-
-    if (_imu == imu_t::imu_none)
     {
       auto bmi2 = new BMI270_Class();
       if (!bmi2->begin(i2c)) {
@@ -99,48 +61,6 @@ namespace m5
         }
 #endif
 
-      }
-    }
-
-    if (_imu == imu_t::imu_none)
-    {
-      auto sh200q = new SH200Q_Class();
-      if (!sh200q->begin(i2c)) { delete sh200q; }
-      else
-      {
-        _imu_instance[0].reset(sh200q);
-        _imu = imu_t::imu_sh200q;
-      }
-    }
-
-    {
-      auto bmm150 = new BMM150_Class();
-      if (!bmm150->begin(i2c)) {
-        delete bmm150;
-      }
-      else
-      {
-        _imu_instance[1].reset(bmm150);
-        if (board == m5::board_t::board_M5Stack)
-        { // M5Stack MPU6886 + BMM150構成では、地磁気のX軸とZ軸をそれぞれ反転する
-          // M5Stack SH200Q + BMM150構成での動作は未確認。(過去に一時期製造されている)
-          _internal_axisorder_fixed[sensor_index_mag] = (internal_axisorder_t)(axis_invert_x | axis_invert_z); // X軸,Z軸反転
-        }
-      }
-    }
-
-    {
-      auto ak8963 = new AK8963_Class();
-      if (!ak8963->begin(i2c)) {
-        delete ak8963;
-      }
-      else
-      {
-        _imu_instance[1].reset(ak8963);
-        if (_imu == imu_t::imu_mpu9250)
-        { // MPU9250内蔵AK8963は地磁気のX軸とY軸を取り換え、Z軸の向きを反転する
-          _internal_axisorder_fixed[sensor_index_mag ] = (internal_axisorder_t)(axis_order_yxz | axis_invert_z); // Y軸X軸を入替, Z軸反転
-        }
       }
     }
 #endif
