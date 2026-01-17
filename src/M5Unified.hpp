@@ -59,7 +59,6 @@ namespace m5
 #include "utility/Power_Class.hpp"
 #include "utility/Speaker_Class.hpp"
 #include "utility/Mic_Class.hpp"
-#include "utility/Touch_Class.hpp"
 #include "utility/Log_Class.hpp"
 #include "utility/LED_Class.hpp"
 #include "utility/IMU_Class.hpp"
@@ -70,7 +69,6 @@ namespace m5
 
 namespace m5
 {
-  using touch_detail_t = Touch_Class::touch_detail_t;
 
   // RTC8563_Class has been discontinued and replaced with RTC_Class.
   // This is a temporary measure for derived libraries. (e.g.M5DinMeter)
@@ -620,18 +618,7 @@ namespace m5
     void _setup_led(board_t);
 
     static void _setup_pinmap(board_t);
-    static bool _speaker_enabled_cb_core2(void* args, bool enabled);
-    static bool _speaker_enabled_cb_cores3(void* args, bool enabled);
-    static bool _speaker_enabled_cb_hat_spk(void* args, bool enabled);
-    static bool _speaker_enabled_cb_atomic_echo(void* args, bool enabled);
-    static bool _speaker_enabled_cb_tab5(void* args, bool enabled);
     static bool _speaker_enabled_cb_cardputer_adv(void* args, bool enabled);
-    static bool _microphone_enabled_cb_stickc(void* args, bool enabled);
-    static bool _microphone_enabled_cb_cores3(void* args, bool enabled);
-    static bool _microphone_enabled_cb_atomic_echo(void* args, bool enabled);
-    static bool _microphone_enabled_cb_atom_echos3r(void* args, bool enabled);
-    static bool _speaker_enabled_cb_atom_echos3r(void* args, bool enabled);
-    static bool _microphone_enabled_cb_tab5(void* args, bool enabled);
     static bool _microphone_enabled_cb_cardputer_adv(void* args, bool enabled);
 
     static int8_t _get_pin_table[pin_name_max];
